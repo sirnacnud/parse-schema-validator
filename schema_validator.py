@@ -76,7 +76,7 @@ def process_class(parse_classes, schema_class, fix):
           else:
             verified = False
         else:
-          print 'Field ' + schema_field + 'not found on ' + schema_class_name
+          print 'Field ' + schema_field + ' not found on ' + schema_class_name
           verified = False
       elif schema_type['type'] != parse_field_type['type']:
         print 'Field ' + schema_field + ' type is ' + parse_field_type['type'] + ' when it should be ' + schema_type['type']
