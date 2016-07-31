@@ -1,9 +1,8 @@
-import argparse, copy, json, httplib
+import argparse, copy, json
+from parse_connection import ParseConnection
 
 api_path = None
 connection = None
-app_id = None
-master_key = None
 
 def add_class(schema_class):
   new_class = {}
@@ -17,12 +16,7 @@ def add_class(schema_class):
 
   new_class['fields'] = new_fields
 
-  connection.request('POST', api_path + '/' + schema_class['className'], json.dumps(new_class), {
-       "X-Parse-Application-Id": app_id,
-       "X-Parse-Master-Key": master_key,
-       "Content-Type": "application/json"
-     })
-  response = connection.getresponse()
+  response = connection.perform_request('POST', api_path + '/' + schema_class['className'], json.dumps(new_class))
   if response.status != 200:
     print 'Failed to created class: ' + response.reason
     return False
@@ -38,12 +32,7 @@ def add_field(class_name, field_name, field_type):
     field_name: field_type
   }
 
-  connection.request('PUT', api_path + '/' + class_name, json.dumps(update_field), {
-       "X-Parse-Application-Id": app_id,
-       "X-Parse-Master-Key": master_key,
-       "Content-Type": "application/json"
-     })
-  response = connection.getresponse()
+  response = connection.perform_request('PUT', api_path + '/' + class_name, json.dumps(update_field))
   if response.status != 200:
     print 'Failed to add ' + field_name + ' to ' + class_name + ': ' + response.reason
     return False
@@ -107,35 +96,25 @@ def get_arguments():
   return arg_parser.parse_args()
 
 def main():
-  command_args = get_arguments()
-
-  global connection
   global api_path
-  global app_id
-  global master_key
-
-  if command_args.port == 443:
-    connection = httplib.HTTPSConnection(command_args.hostName, command_args.port)
-  else:
-    connection = httplib.HTTPConnection(command_args.hostName, command_args.port)
+  global connection
 
   api_path = ''
+
+  command_args = get_arguments()
 
   if command_args.resourcePath:
     api_path = command_args.resourcePath
 
   api_path += '/schemas'
+  host = command_args.hostName
+  port = command_args.port
   app_id = command_args.appId
   master_key = command_args.masterKey
 
+  connection = ParseConnection(host, port, app_id, master_key)
   connection.connect()
-  connection.request('GET', api_path, '', {
-         "X-Parse-Application-Id": app_id,
-         "X-Parse-Master-Key": master_key,
-         "Content-Type": "application/json"
-       })
-
-  response = connection.getresponse()
+  response = connection.perform_request('GET', api_path, '')
 
   if response.status == 200:
     results = json.loads(response.read())
