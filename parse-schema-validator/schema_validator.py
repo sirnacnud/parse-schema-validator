@@ -85,7 +85,7 @@ def process_class(parse_classes, schema_class, fix):
   return verified
 
 def get_arguments():
-  arg_parser = argparse.ArgumentParser('Tool for validating and creating Parse Classes on a Parse Server' )
+  arg_parser = argparse.ArgumentParser('Tool for validating Parse Classes on a Parse Server' )
   arg_parser.add_argument('-s', '--schema', help='Json file describing the Parse Classes')
   arg_parser.add_argument('-m', '--masterKey', help='Parse Server master key', required=True)
   arg_parser.add_argument('-a', '--appId', help='Parse Server app id', required=True)
