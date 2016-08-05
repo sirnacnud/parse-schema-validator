@@ -201,9 +201,9 @@ def run():
                     parse_classes, schema_class, command_args.fixInteractive)
 
                 if not verified:
-                    print('Failed to verify ' + schema_class['className'])
+                    print('Failed to validate ' + schema_class['className'])
                 else:
-                    print('Verified ' + schema_class['className'])
+                    print('Validated ' + schema_class['className'])
         else:
             print('Error: schema file required to verify')
     else:
