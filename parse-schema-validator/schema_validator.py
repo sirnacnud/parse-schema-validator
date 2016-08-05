@@ -96,7 +96,7 @@ def get_arguments():
   arg_parser.add_argument('-d', '--dump', help='Dump json to standard out of the current parse schema', default=False, action='store_true')
   return arg_parser.parse_args()
 
-def main():
+def run():
   global api_path
   global connection
 
@@ -140,6 +140,3 @@ def main():
       print 'Error: schema file required to verify'
   else:
     print 'Failed to connect to Parse Server - ' + response.reason
-
-if __name__ == "__main__":
-  main()
