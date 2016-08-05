@@ -64,7 +64,7 @@ $ parse-schema-validator -m myMasterKey -a myAppId -n localhost -p 1337 -r /pars
 ```
 
 ## Limitations
-* Only https port support is 443, any other port is considered http.
+* Only https port supported is 443, any other port is considered http.
 * Doesn't have support to change field types or to remove classes/fields.
 
 ## Author
