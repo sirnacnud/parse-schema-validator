@@ -6,7 +6,10 @@ This tool is useful for managing the schema of your Parse classes, as your Parse
 The tool works by using the [Parse REST Schema API](http://parseplatform.github.io/docs/rest/guide/#schema).
 
 ## Installing
-Instructions coming soon...
+Install with pip:
+```
+$ pip install parse-schema-validator
+```
 
 ## Usage
 
