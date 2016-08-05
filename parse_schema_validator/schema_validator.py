@@ -162,7 +162,7 @@ def get_arguments():
     return arg_parser.parse_args()
 
 
-def run():
+def main():
     global api_path
     global connection
 
