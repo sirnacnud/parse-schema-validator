@@ -86,13 +86,14 @@ def process_class(parse_classes, schema_class, fix):
 
 def get_arguments():
   arg_parser = argparse.ArgumentParser('Tool for validating and creating Parse Classes on a Parse Server' )
-  arg_parser.add_argument('-s', '--schema', help='Json file describing the Parse Classes', required=True)
+  arg_parser.add_argument('-s', '--schema', help='Json file describing the Parse Classes')
   arg_parser.add_argument('-m', '--masterKey', help='Parse Server master key', required=True)
   arg_parser.add_argument('-a', '--appId', help='Parse Server app id', required=True)
   arg_parser.add_argument('-n', '--hostName', help='Parse Server host name', required=True)
   arg_parser.add_argument('-p', '--port', help='Parse Server port', default=443)
   arg_parser.add_argument('-r', '--resourcePath', help='Parse Server API resource path')
   arg_parser.add_argument('-f', '--fixInteractive', help='Interactively fix schema validation errors', default=False, action='store_true')
+  arg_parser.add_argument('-d', '--dump', help='Dump json to standard out of the current parse schema', default=False, action='store_true')
   return arg_parser.parse_args()
 
 def main():
@@ -120,16 +121,23 @@ def main():
     results = json.loads(response.read())
     parse_classes = results['results']
 
-    schema_file = open(command_args.schema, 'r')
-    schema_json = schema_file.read()
-    schema = json.loads(schema_json)
-    for schema_class in schema['classes']:
-      verified = process_class(parse_classes, schema_class, command_args.fixInteractive)
+    if command_args.dump:
+      for item in parse_classes:
+        del item['classLevelPermissions']
+      print(json.dumps({'classes': parse_classes}, indent=2, sort_keys=True))
+    elif command_args.schema:
+      schema_file = open(command_args.schema, 'r')
+      schema_json = schema_file.read()
+      schema = json.loads(schema_json)
+      for schema_class in schema['classes']:
+        verified = process_class(parse_classes, schema_class, command_args.fixInteractive)
 
-      if not verified:
-        print 'Failed to verify ' + schema_class['className']
-      else:
-        print 'Verified ' + schema_class['className']
+        if not verified:
+          print 'Failed to verify ' + schema_class['className']
+        else:
+          print 'Verified ' + schema_class['className']
+    else:
+      print 'Error: schema file required to verify'
   else:
     print 'Failed to connect to Parse Server - ' + response.reason
 
