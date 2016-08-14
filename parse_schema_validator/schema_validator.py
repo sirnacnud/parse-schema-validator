@@ -189,7 +189,7 @@ def main():
 
         if command_args.dump:
             for item in parse_classes:
-                del item['classLevelPermissions']
+                item.pop('classLevelPermissions', None)
             print(json.dumps({'classes': parse_classes},
                              indent=2, sort_keys=True))
         elif command_args.schema:
